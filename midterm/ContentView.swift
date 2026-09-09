@@ -1,21 +1,16 @@
-//
-//  ContentView.swift
-//  midterm
-//
-//  Created by Mac-LAB on 9/9/26.
-//
-
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject private var appState = AppState()
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        Group {
+            if appState.onboarded {
+                MainAppView(appState: appState)
+            } else {
+                OnboardingView(appState: appState)
+            }
         }
-        .padding()
     }
 }
 

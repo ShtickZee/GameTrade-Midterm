@@ -1,0 +1,10 @@
+{
+  "description": "Create interactive UI prototypes effortlessly, enabling designers and developers to visualize and test user experiences before implementation.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
