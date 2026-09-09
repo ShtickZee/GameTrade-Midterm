@@ -1,0 +1,160 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import 'tailwindcss';
+
+:root {
+  /* Purple scale */
+  --p900: #241049;
+  --p800: #33156B;
+  --p700: #45239E;
+  --p600: #5B2FD9;
+  --p500: #7C5CFF;
+  --p400: #9B7BFF;
+  --p300: #BDA6FF;
+  --p100: #E9E1FF;
+  --p50: #F5F1FF;
+
+  /* Accents */
+  --mint500: #23C997;
+  --mint100: #DFF7EF;
+  --amber500: #FFB020;
+  --amber100: #FFF3D6;
+  --coral500: #FF6B5E;
+  --coral100: #FFE7E4;
+  --pink500: #FF7BD5;
+  --info: #3E7BFA;
+
+  /* Semantic */
+  --success: #16A06A;
+  --warning: #E8A200;
+  --danger: #E5484D;
+
+  /* Neutrals */
+  --ink900: #1E1633;
+  --ink700: #3A3350;
+  --ink500: #6E6884;
+  --ink400: #948FA8;
+  --line200: #E9E6F0;
+  --surface100: #F6F5FA;
+  --surface0: #FFFFFF;
+
+  /* Platform */
+  --ps: #0070D1;
+  --xbox: #107C10;
+  --switch: #E60012;
+
+  /* Gradients */
+  --grad-brand: linear-gradient(135deg, #5B2FD9 0%, #7C5CFF 55%, #A78BFA 100%);
+  --grad-hero: linear-gradient(160deg, #241049 0%, #5B2FD9 60%, #7C5CFF 100%);
+  --grad-seasonal: linear-gradient(135deg, #7C5CFF 0%, #FF7BD5 100%);
+  --grad-mint: linear-gradient(135deg, #23C997 0%, #4BE3B2 100%);
+  --grad-cta: linear-gradient(90deg, #5B2FD9 0%, #7C5CFF 100%);
+  --grad-soft-card: linear-gradient(180deg, #FFFFFF 0%, #F5F1FF 100%);
+  --grad-onboarding: linear-gradient(180deg, #F5F1FF 0%, #E9E1FF 100%);
+  --grad-flash: linear-gradient(135deg, #FF6B5E 0%, #FF9F68 100%);
+}
+
+html, body, #root {
+  height: 100%;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', sans-serif;
+  background: #0f0f0f;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes count-up {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-up {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes scale-in {
+  from { transform: scale(0.85); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes confetti-fall {
+  0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(120px) rotate(360deg); opacity: 0; }
+}
+
+@keyframes check-draw {
+  from { stroke-dashoffset: 60; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes heart-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+@keyframes dot-pill {
+  from { width: 8px; border-radius: 4px; }
+  to { width: 24px; border-radius: 4px; }
+}
+
+@keyframes slide-in-right {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes slide-in-left {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes stock-fill {
+  from { width: 0%; }
+  to { width: var(--pct); }
+}
+
+.shimmer-block {
+  position: relative;
+  overflow: hidden;
+  background: #EFEDF5;
+  border-radius: 8px;
+}
+.shimmer-block::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, #F8F7FC 50%, transparent 100%);
+  animation: shimmer 1.4s linear infinite;
+}
+
+.sheet-enter { animation: slide-up 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.scale-enter { animation: scale-in 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.fade-enter { animation: fade-in 0.2s ease both; }
+.slide-right-enter { animation: slide-in-right 0.3s cubic-bezier(0.2, 0, 0, 1) both; }
+
+/* Hide scrollbars */
+.no-scroll::-webkit-scrollbar { display: none; }
+.no-scroll { scrollbar-width: none; -ms-overflow-style: none; }
+
+/* Avatar gradient ring via conic-gradient trick */
+.avatar-ring {
+  background: conic-gradient(from 0deg, #5B2FD9, #7C5CFF, #A78BFA, #5B2FD9);
+  animation: spin-slow 8s linear infinite;
+}
