@@ -61,15 +61,22 @@ struct OffersView: View {
     
     var body: some View {
         NavigationStack(path: $appState.navigationPath) {
-            VStack {
-                Picker("Offers", selection: $selectedTab) {
-                    Text("Incoming (2)").tag(0)
-                    Text("Sent (3)").tag(1)
-                }
-                .pickerStyle(SegmentedPickerStyle())
-                .padding()
-                
-                ScrollView {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    HStack {
+                        Text("Offers").font(.title2).bold()
+                        Spacer()
+                        Image(systemName: "message.fill")
+                    }
+                    .padding(.horizontal)
+                    
+                    Picker("Offers", selection: $selectedTab) {
+                        Text("Incoming (2)").tag(0)
+                        Text("Sent (3)").tag(1)
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                    .padding(.horizontal)
+                    
                     VStack(spacing: 16) {
                         OfferCardView(
                             title: "kai_gamer",
@@ -83,8 +90,8 @@ struct OffersView: View {
                         )
                     }
                 }
+                .padding(.top)
             }
-            .navigationTitle("Offers")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Mark all read") { }

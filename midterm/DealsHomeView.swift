@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 struct CategoryItem: Identifiable {
     let id = UUID()
@@ -21,6 +22,21 @@ struct DealsHomeView: View {
         CategoryItem(title: "Accessories", icon: "headphones", color: .gray.opacity(0.1))
     ]
     
+    @State private var timeRemaining = 2 * 3600 + 14 * 60 + 32
+    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    
+    // Carousel state
+    @State private var carouselIndex = 0
+    let carouselItems = ["gamecontroller", "shippingbox", "bolt"]
+    let carouselTimer = Timer.publish(every: 3, on: .main, in: .common).autoconnect()
+
+    func formatTime(_ seconds: Int) -> String {
+        let hours = seconds / 3600
+        let minutes = (seconds % 3600) / 60
+        let seconds = seconds % 60
+        return String(format: "%02d : %02d : %02d", hours, minutes, seconds)
+    }
+
     var body: some View {
         NavigationStack(path: $appState.navigationPath) {
             ScrollView {
@@ -31,7 +47,7 @@ struct DealsHomeView: View {
                             Text("Game").font(.title2).bold() + Text("Trade!").font(.title2).bold().foregroundColor(.purple)
                             Text("⚡️")
                             Spacer()
-                            Image(systemName: "bell.fill")
+                            Image(systemName: "message.fill")
                         }
                         .padding(.horizontal)
                         
@@ -48,12 +64,21 @@ struct DealsHomeView: View {
                         .frame(height: 160)
                         .padding(.horizontal)
                         .overlay(
-                            VStack(alignment: .leading) {
-                                Text("SPRING RESET SALE").font(.caption).foregroundColor(.white.opacity(0.8))
-                                Text("Trade in your old\nconsole level up").font(.title2).bold().foregroundColor(.white)
-                                Button("Start trading") {}.padding(.vertical, 8).padding(.horizontal, 16).background(.white).cornerRadius(8)
-                            }
-                            .padding(.leading, 32),
+                            HStack {
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Text("SPRING RESET SALE").font(.caption).foregroundColor(.white.opacity(0.8))
+                                    Text("Trade in your old\nconsole level up").font(.title2).bold().foregroundColor(.white)
+                                    Button("Start trading") {}.padding(.vertical, 8).padding(.horizontal, 16).background(.white).cornerRadius(8)
+                                }
+                                .padding(.leading, 32)
+                                Spacer()
+                                Image(systemName: "gamecontroller.fill")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 60, height: 60)
+                                    .foregroundColor(.white)
+                                    .padding(.trailing, 32)
+                            },
                             alignment: .leading
                         )
                     
@@ -73,14 +98,47 @@ struct DealsHomeView: View {
                     }
                     
                     // Flash Deals
-                    HStack {
-                        Text("⚡️ Flash Deals").font(.headline)
-                        Spacer()
-                        Text("02 : 14 : 32").font(.system(.subheadline, design: .monospaced)).padding(8).background(Color.orange.opacity(0.2)).cornerRadius(8)
+                    VStack(spacing: 16) {
+                        HStack {
+                            Text("⚡️ Flash Deals").font(.headline)
+                            Spacer()
+                            Text(formatTime(timeRemaining)).font(.system(.subheadline, design: .monospaced)).padding(8).background(Color.orange.opacity(0.2)).cornerRadius(8)
+                                .onReceive(timer) { _ in
+                                    if timeRemaining > 0 {
+                                        timeRemaining -= 1
+                                    }
+                                }
+                        }
+                        .padding(.horizontal)
+                        
+                        // Carousel
+                        TabView(selection: $carouselIndex) {
+                            ForEach(0..<carouselItems.count, id: \.self) { index in
+                                RoundedRectangle(cornerRadius: 15)
+                                    .fill(Color.orange.opacity(0.2))
+                                    .overlay(Image(systemName: carouselItems[index]).font(.system(size: 50)))
+                            }
+                        }
+                        .frame(height: 150)
+                        .tabViewStyle(PageTabViewStyle())
+                        .onReceive(carouselTimer) { _ in
+                            withAnimation {
+                                carouselIndex = (carouselIndex + 1) % carouselItems.count
+                            }
+                        }
+                        
+                        // 3x3 Grid
+                        LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 10) {
+                            ForEach(0..<9, id: \.self) { _ in
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(Color.gray.opacity(0.1))
+                                    .aspectRatio(1, contentMode: .fit)
+                            }
+                        }
+                        .padding(.horizontal)
                     }
-                    .padding(.horizontal)
                     .padding(.vertical, 8)
-                    .background(Color.orange.opacity(0.1))
+                    .background(Color.orange.opacity(0.05))
                     .padding(.horizontal)
                 }
                 .padding(.top)
