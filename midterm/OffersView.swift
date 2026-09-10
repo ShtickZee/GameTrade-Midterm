@@ -92,6 +92,7 @@ struct OffersView: View {
                 }
                 .padding(.top)
             }
+            .navigationTitle("Offers")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Mark all read") { }

@@ -41,7 +41,7 @@ struct MarketplaceView: View {
         listings.filter { listing in
             let matchesSearch = searchText.isEmpty || listing.title.localizedCaseInsensitiveContains(searchText)
             let matchesPlatform = selectedPlatform == nil || listing.platform == selectedPlatform
-            // Category filtering would require more complex mapping based on listing type, 
+            // Category filtering would require more complex mapping based on listing type,
             // placeholder logic for now
             return matchesSearch && matchesPlatform
         }
@@ -105,7 +105,34 @@ struct MarketplaceView: View {
                         Text("Filters").presentationDetents([.medium])
                     }
 
+                    // Filter Chips
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack {
+                            FilterChip(title: "All", isSelected: true)
+                            FilterChip(title: "PlayStation", isSelected: false)
+                            FilterChip(title: "Xbox", isSelected: false)
+                            FilterChip(title: "Switch", isSelected: false)
+                        }
+                        .padding(.horizontal)
+                    }
+                    
+                    // Featured Header
+                    Text("Featured — verified sellers")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                        .padding(.horizontal)
+                    
+                    // Featured Card (Placeholder)
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(Color.purple.opacity(0.8))
+                        .frame(height: 150)
+                        .padding(.horizontal)
+                        
                     // Listings Grid
+                    Text("\(filteredListings.count) listings")
+                        .font(.headline)
+                        .padding(.horizontal)
+                    
                     LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
                         ForEach(filteredListings) { listing in
                             ListingCardView(listing: listing)
@@ -113,7 +140,9 @@ struct MarketplaceView: View {
                     }
                     .padding(.horizontal)
                 }
+                .padding(.top)
             }
+            .navigationTitle("Marketplace")
         }
     }
 }
