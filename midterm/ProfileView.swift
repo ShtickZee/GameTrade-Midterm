@@ -21,6 +21,7 @@ struct ProfileView: View {
                             .overlay(Circle().stroke(Color.white, lineWidth: 4))
                             .offset(y: 50)
                     }
+
                     .padding(.bottom, 50)
                     
                     // Name & Verified
@@ -118,6 +119,10 @@ struct ProfileView: View {
             .navigationBarTitleDisplayMode(.inline)
         }
     }
+}
+
+#Preview {
+    ProfileView(appState: AppState())
 }
 
 struct VerificationBenefitsView: View {

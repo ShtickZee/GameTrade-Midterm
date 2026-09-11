@@ -21,6 +21,7 @@ struct OfferCardView: View {
                         .font(.subheadline)
                         .foregroundColor(.primary)
                 }
+
                 
                 Spacer()
                 
@@ -33,13 +34,13 @@ struct OfferCardView: View {
             }
             
             HStack(spacing: 12) {
-                Button("Decline") { }
+                Button("Reject") { }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 10)
                     .background(Color.gray.opacity(0.1))
                     .cornerRadius(10)
                 
-                Button("Accept ✓") { }
+                Button("Chat") { }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 10)
                     .background(Color.purple)
@@ -55,6 +56,10 @@ struct OfferCardView: View {
     }
 }
 
+#Preview {
+    OffersView(appState: AppState())
+}
+
 struct OffersView: View {
     @ObservedObject var appState: AppState
     @State private var selectedTab = 0
@@ -63,13 +68,6 @@ struct OffersView: View {
         NavigationStack(path: $appState.navigationPath) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    HStack {
-                        Text("Offers").font(.title2).bold()
-                        Spacer()
-                        Image(systemName: "message.fill")
-                    }
-                    .padding(.horizontal)
-                    
                     Picker("Offers", selection: $selectedTab) {
                         Text("Incoming (2)").tag(0)
                         Text("Sent (3)").tag(1)
@@ -78,11 +76,6 @@ struct OffersView: View {
                     .padding(.horizontal)
                     
                     VStack(spacing: 16) {
-                        OfferCardView(
-                            title: "kai_gamer",
-                            subtitle: "offered $265 on Switch OLED — White",
-                            status: "Pending"
-                        )
                         OfferCardView(
                             title: "mia.trades",
                             subtitle: "wants to trade: Xbox Series S + $40 on PS4 Pro 1TB",
@@ -93,12 +86,6 @@ struct OffersView: View {
                 .padding(.top)
             }
             .navigationTitle("Offers")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Mark all read") { }
-                        .font(.caption)
-                }
-            }
         }
     }
 }

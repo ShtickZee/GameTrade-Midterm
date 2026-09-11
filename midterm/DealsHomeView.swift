@@ -8,6 +8,11 @@ struct CategoryItem: Identifiable {
     let color: Color
 }
 
+#Preview {
+    DealsHomeView(appState: AppState())
+}
+
+
 struct DealsHomeView: View {
     @ObservedObject var appState: AppState
     

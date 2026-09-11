@@ -10,6 +10,7 @@ struct OnboardingView: View {
         let title: String
         let sub: String
     }
+
     
     let slides = [
         Slide(emoji: "🎮", gradient: LinearGradient(colors: [.purple, .blue], startPoint: .topLeading, endPoint: .bottomTrailing), title: "Welcome to GameTrade!", sub: "Buy, sell, and trade PlayStation, Xbox, and Nintendo Switch consoles — all in one place."),
@@ -82,4 +83,8 @@ struct OnboardingView: View {
         }
         .background(Color(.systemGroupedBackground))
     }
+}
+
+#Preview {
+    OnboardingView(appState: AppState())
 }

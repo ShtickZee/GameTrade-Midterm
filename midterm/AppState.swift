@@ -31,7 +31,10 @@ enum SheetType: Identifiable {
 }
 
 class AppState: ObservableObject {
-    @Published var onboarded = false
+    // Auth state
+    @AppStorage("isAuthenticated") var isAuthenticated = false
+    @AppStorage("onboarded") var onboarded = false
+    
     @Published var activeTab: Tab = .deals
     @Published var navigationPath = NavigationPath()
     @Published var activeSheet: SheetType?
@@ -65,5 +68,10 @@ class AppState: ObservableObject {
         if tab == .offers {
             offersBadge = false
         }
+    }
+    
+    func logout() {
+        isAuthenticated = false
+        onboarded = false
     }
 }

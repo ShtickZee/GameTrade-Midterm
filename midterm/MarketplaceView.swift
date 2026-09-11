@@ -15,6 +15,10 @@ struct FilterChip: View {
     }
 }
 
+#Preview {
+    MarketplaceView(appState: AppState())
+}
+
 struct MarketplaceView: View {
     @ObservedObject var appState: AppState
     
