@@ -32,16 +32,20 @@ struct DealsHomeView: View {
     
     // Carousel state
     @State private var carouselIndex = 0
-    let carouselItems = ["gamecontroller", "shippingbox", "bolt"]
+    let carouselItems = ["PS5", "xbox_1", "Nintendo_switch_2_Fullspecwithgames"]
     let carouselTimer = Timer.publish(every: 3, on: .main, in: .common).autoconnect()
+    
+    // Grid images
+    let gridImages = ["PS5", "PS5_2", "PS5_Slim_W_Controller", "PS5_With_Controller_And_HDMI_Cable", "xbox_1", "xbox_series_s_1", "xbox_series_s_2", "Nintendo_switch_2_Fullspecwithgames", "Nintendo_Switch_2_with_case_bag"]
 
+    
     func formatTime(_ seconds: Int) -> String {
         let hours = seconds / 3600
         let minutes = (seconds % 3600) / 60
         let seconds = seconds % 60
         return String(format: "%02d : %02d : %02d", hours, minutes, seconds)
     }
-
+    
     var body: some View {
         NavigationStack(path: $appState.navigationPath) {
             ScrollView {
@@ -61,6 +65,9 @@ struct DealsHomeView: View {
                             .background(Color.gray.opacity(0.1))
                             .cornerRadius(12)
                             .padding(.horizontal)
+                            .onTapGesture {
+                                appState.activeSheet = .search
+                            }
                     }
                     
                     // Promo Banner
@@ -77,11 +84,12 @@ struct DealsHomeView: View {
                                 }
                                 .padding(.leading, 32)
                                 Spacer()
-                                Image(systemName: "gamecontroller.fill")
+                                Image("PS5_Slim_W_Controller")
                                     .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 60, height: 60)
-                                    .foregroundColor(.white)
+                                    .scaledToFill() // Using fill to ensure it covers area
+                                    .frame(width: 100, height: 100)
+                                    .clipped()
+                                    .cornerRadius(15)
                                     .padding(.trailing, 32)
                             },
                             alignment: .leading
@@ -119,9 +127,12 @@ struct DealsHomeView: View {
                         // Carousel
                         TabView(selection: $carouselIndex) {
                             ForEach(0..<carouselItems.count, id: \.self) { index in
-                                RoundedRectangle(cornerRadius: 15)
-                                    .fill(Color.orange.opacity(0.2))
-                                    .overlay(Image(systemName: carouselItems[index]).font(.system(size: 50)))
+                                Image(carouselItems[index])
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(maxWidth: .infinity, maxHeight: 150) // Explicit frame
+                                    .clipped()
+                                    .cornerRadius(15)
                             }
                         }
                         .frame(height: 150)
@@ -134,10 +145,13 @@ struct DealsHomeView: View {
                         
                         // 3x3 Grid
                         LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 10) {
-                            ForEach(0..<9, id: \.self) { _ in
-                                RoundedRectangle(cornerRadius: 10)
-                                    .fill(Color.gray.opacity(0.1))
-                                    .aspectRatio(1, contentMode: .fit)
+                            ForEach(0..<gridImages.count, id: \.self) { i in
+                                Image(gridImages[i])
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(maxWidth: .infinity, maxHeight: 100) // Explicit frame
+                                    .clipped()
+                                    .cornerRadius(10)
                             }
                         }
                         .padding(.horizontal)

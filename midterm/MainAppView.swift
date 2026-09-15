@@ -39,6 +39,8 @@ struct MainAppView: View {
                 Text("Filters")
             case .sell:
                 Text("Sell Flow")
+            case .search:
+                SearchView(appState: appState)
             }
         }
     }

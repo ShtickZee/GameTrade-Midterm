@@ -5,11 +5,21 @@ struct ListingCardView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            // Placeholder for image
-            RoundedRectangle(cornerRadius: 10)
-                .fill(Color.gray.opacity(0.2))
-                .aspectRatio(1, contentMode: .fit)
-                .overlay(Text("📷").font(.largeTitle))
+            // Updated to load image with proper constraints
+            if let imageName = listing.images.first {
+                Image(imageName)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill) // Changed to aspectRatio(contentMode: .fill)
+                    .frame(maxWidth: .infinity) // Ensure it takes available width
+                    .frame(height: 150) // Set fixed height
+                    .clipped() // Ensure it stays within bounds
+                    .cornerRadius(10)
+            } else {
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(Color.gray.opacity(0.2))
+                    .aspectRatio(1, contentMode: .fit)
+                    .overlay(Text("📷").font(.largeTitle))
+            }
             
             Text(listing.title)
                 .font(.subheadline)

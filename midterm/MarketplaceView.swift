@@ -22,12 +22,13 @@ struct FilterChip: View {
 struct MarketplaceView: View {
     @ObservedObject var appState: AppState
     
-    // Mock listings for display
+    // Updated listings with actual image names
     let listings = [
-        Listing(id: "L1", title: "PS5 Disc Edition — 1TB", price: 430, was: 499, platform: .ps5, condition: .likeNew, sellerId: "jordan", location: "Quezon City", saved: false, bundle: nil, images: nil, description: nil),
-        Listing(id: "L2", title: "Xbox Series X — 1TB", price: 350, was: nil, platform: .xbox, condition: .good, sellerId: "mia", location: "Makati", saved: true, bundle: nil, images: nil, description: nil),
-        Listing(id: "L3", title: "Nintendo Switch OLED — White", price: 280, was: nil, platform: .switchConsole, condition: .likeNew, sellerId: "gamehaven", location: "BGC", saved: false, bundle: nil, images: nil, description: nil),
-        Listing(id: "L4", title: "PS4 Pro 1TB", price: 150, was: 169, platform: .ps4, condition: .fair, sellerId: "alex", location: "Pasig", saved: false, bundle: nil, images: nil, description: nil)
+        Listing(id: "L1", title: "PS5 Disc Edition — 1TB", price: 430, was: 499, platform: .ps5, condition: .likeNew, sellerID: "jordan", sellerName: "Jordan", sellerAvatar: "person", sellerRating: 4.5, isVerified: true, location: "Quezon City", saved: false, bundle: nil, images: ["PS5"], description: "Great condition PS5."),
+        Listing(id: "L2", title: "Xbox Series X — 1TB", price: 350, was: nil, platform: .xbox, condition: .good, sellerID: "mia", sellerName: "Mia", sellerAvatar: "person", sellerRating: 4.2, isVerified: false, location: "Makati", saved: true, bundle: nil, images: ["xbox_1"], description: "Used for 6 months."),
+        Listing(id: "L3", title: "Nintendo Switch OLED — White", price: 280, was: nil, platform: .switchConsole, condition: .likeNew, sellerID: "gamehaven", sellerName: "GameHaven", sellerAvatar: "person", sellerRating: 4.8, isVerified: true, location: "BGC", saved: false, bundle: nil, images: ["Nintendo_switch_2_Fullspecwithgames"], description: "Brand new."),
+        Listing(id: "L4", title: "PS5 Dualsense", price: 300, was: nil, platform: .ps5, condition: .likeNew, sellerID: "alfye", sellerName: "Alfye Reyes", sellerAvatar: "person", sellerRating: 4.9, isVerified: true, location: "Quezon City", saved: false, bundle: nil, images: ["dualsense_controller"], description: "Like new dualsense controller."),
+        Listing(id: "L5", title: "PS4 Pro 1TB", price: 150, was: 169, platform: .ps4, condition: .fair, sellerID: "alex", sellerName: "Alex", sellerAvatar: "person", sellerRating: 4.0, isVerified: false, location: "Pasig", saved: false, bundle: nil, images: ["PS5_Slim_W_Controller"], description: "Fair condition.")
     ]
     
     @State private var searchText = ""
@@ -139,7 +140,9 @@ struct MarketplaceView: View {
                     
                     LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
                         ForEach(filteredListings) { listing in
-                            ListingCardView(listing: listing)
+                            NavigationLink(value: StackScreen.listing(listingId: listing.id)) {
+                                ListingCardView(listing: listing)
+                            }
                         }
                     }
                     .padding(.horizontal)
@@ -147,6 +150,28 @@ struct MarketplaceView: View {
                 .padding(.top)
             }
             .navigationTitle("Marketplace")
+            .navigationDestination(for: StackScreen.self) { screen in
+                switch screen {
+                case .listing(let id):
+                    if let listing = listings.first(where: { $0.id == id }) {
+                        ListingDetailView(listing: listing)
+                    } else {
+                        Text("Listing not found")
+                    }
+                case .otherProfile(let userId):
+                    // Preview own profile using same component
+                    let isAlfye = userId == "alfye"
+                    OtherProfileView(
+                        userId: userId,
+                        userName: isAlfye ? "Alfye Reyes" : "Sarah Johnson",
+                        rating: isAlfye ? 4.9 : 4.8,
+                        bio: isAlfye ? "Gamer and collector." : "Casual gamer and trader.",
+                        reviews: [Review(reviewerName: "Mike", rating: 4, comment: "Great seller", date: "2 days ago")]
+                    )
+                default:
+                    Text("Screen not implemented")
+                }
+            }
         }
     }
 }

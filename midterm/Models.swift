@@ -16,17 +16,21 @@ enum Condition: String, Codable {
 
 struct Listing: Identifiable, Codable {
     let id: String
-    let title: String
-    let price: Double
-    let was: Double?
-    let platform: Platform
-    let condition: Condition
-    let sellerId: String
-    let location: String
-    let saved: Bool
-    let bundle: String?
-    let images: [String]?
-    let description: String?
+    var title: String
+    var price: Double
+    var was: Double?
+    var platform: Platform
+    var condition: Condition
+    var sellerID: String
+    var sellerName: String
+    var sellerAvatar: String
+    var sellerRating: Double
+    var isVerified: Bool
+    var location: String
+    var saved: Bool
+    var bundle: String?
+    var images: [String]
+    var description: String
 }
 
 struct Seller: Identifiable, Codable {
@@ -42,4 +46,12 @@ struct Seller: Identifiable, Codable {
     let soldCount: Int
     let responseTime: String?
     let avatar: String?
+}
+
+struct Review: Identifiable {
+    let id = UUID()
+    let reviewerName: String
+    let rating: Double
+    let comment: String
+    let date: String
 }

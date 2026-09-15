@@ -37,11 +37,7 @@ struct LoginView: View {
             Button("Sign In") {
                 appState.isAuthenticated = true
             }
-            .frame(maxWidth: .infinity)
-            .padding()
-            .background(Color.purple)
-            .foregroundColor(.white)
-            .cornerRadius(12)
+            .primaryButtonStyle()
             .padding(.horizontal)
             
             Spacer()

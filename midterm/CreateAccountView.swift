@@ -51,11 +51,7 @@ struct CreateAccountView: View {
                     appState.onboarded = false
                 }
             }
-            .frame(maxWidth: .infinity)
-            .padding()
-            .background(Color.purple)
-            .foregroundColor(.white)
-            .cornerRadius(12)
+            .primaryButtonStyle()
             .padding(.horizontal)
             
             Button("Already have an account? Sign in") {

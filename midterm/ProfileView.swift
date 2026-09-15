@@ -17,7 +17,7 @@ struct ProfileView: View {
                         Circle()
                             .fill(Color.white)
                             .frame(width: 100, height: 100)
-                            .overlay(Text("A").font(.system(size: 40, weight: .bold)).foregroundColor(.purple))
+                            .overlay(Text(String(appState.userName.prefix(1))).font(.system(size: 40, weight: .bold)).foregroundColor(.purple))
                             .overlay(Circle().stroke(Color.white, lineWidth: 4))
                             .offset(y: 50)
                     }
@@ -27,15 +27,15 @@ struct ProfileView: View {
                     // Name & Verified
                     VStack(spacing: 4) {
                         HStack {
-                            Text("Alex Reyes")
+                            Text(appState.userName)
                                 .font(.title2)
                                 .fontWeight(.bold)
                             Image(systemName: "checkmark.circle.fill")
                                 .foregroundColor(.green)
                         }
-                        Text("@alextrades")
+                        Text(appState.userHandle)
                             .foregroundColor(.gray)
-                        Text("Member since Mar 2025 · Makati")
+                        Text("Member since Mar 2025 · \(appState.userLocation)")
                             .font(.caption)
                             .foregroundColor(.gray)
                     }
@@ -85,26 +85,33 @@ struct ProfileView: View {
                     
                     // Buttons
                     VStack(spacing: 16) {
-                        HStack {
-                            Button("Edit profile") { }
+                        NavigationLink(value: StackScreen.editProfile) {
+                            Text("Edit profile")
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 12)
-                                .background(Color.white)
                                 .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.purple))
+                        }
+                        .padding(.horizontal)
+                        
+                        // Added Preview Button
+                        NavigationLink(value: StackScreen.otherProfile(userId: "currentUser")) {
+                            Text("View Profile Preview")
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 12)
+                                .background(Color.purple.opacity(0.1))
+                                .foregroundColor(.purple)
                                 .cornerRadius(12)
                         }
                         .padding(.horizontal)
                         
                         // New Buttons
                         Button("Switch account") { }
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 12)
-                            .background(Color.gray.opacity(0.2))
-                            .foregroundColor(.primary)
-                            .cornerRadius(12)
+                            .secondaryButtonStyle()
                             .padding(.horizontal)
                         
-                        Button("Logout") { }
+                        Button("Logout") {
+                            appState.logout()
+                        }
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 12)
                             .background(Color.red.opacity(0.1))
@@ -117,6 +124,24 @@ struct ProfileView: View {
             }
             .navigationTitle("Profile")
             .navigationBarTitleDisplayMode(.inline)
+            .navigationDestination(for: StackScreen.self) { screen in
+                switch screen {
+                case .editProfile:
+                    EditProfileView(appState: appState)
+                case .otherProfile(let userId):
+                    // Preview own profile using same component
+                    let isPreview = userId == "currentUser"
+                    OtherProfileView(
+                        userId: userId,
+                        userName: isPreview ? appState.userName : "Sarah Johnson",
+                        rating: 4.8,
+                        bio: isPreview ? appState.userBio : "Gamer since 1990.",
+                        reviews: isPreview ? [Review(reviewerName: "Mike", rating: 4, comment: "Great seller", date: "2 days ago")] : []
+                    )
+                default:
+                    Text("Screen not implemented")
+                }
+            }
         }
     }
 }
