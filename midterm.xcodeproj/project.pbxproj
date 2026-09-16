@@ -6,11 +6,16 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		83D1C6CA305A55E2007A30DF /* ProfileSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D1C6C9305A55E1007A30DF /* ProfileSetupView.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		834A1C03305153E000690436 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		834A1C05305153E900690436 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		834A1C07305153FA00690436 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		83708905305143E9009EF86C /* midterm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = midterm.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		83D1C6C9305A55E1007A30DF /* ProfileSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSetupView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -64,6 +69,7 @@
 				834A1C02305153DB00690436 /* Models */,
 				834A1C04305153E300690436 /* ViewModels */,
 				834A1C06305153F500690436 /* Views */,
+				83D1C6C9305A55E1007A30DF /* ProfileSetupView.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -149,6 +155,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				83D1C6CA305A55E2007A30DF /* ProfileSetupView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

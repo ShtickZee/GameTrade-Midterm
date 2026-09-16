@@ -82,10 +82,14 @@ struct ListingDetailView: View {
                 
                 // Action Buttons
                 HStack(spacing: 16) {
-                    Button("Contact Seller") { }
+                    Button("Contact Seller") {
+                        appState.showToast("Contacting seller...")
+                    }
                         .secondaryButtonStyle()
                     
-                    Button("Make Offer") { }
+                    Button("Make Offer") {
+                        appState.activeSheet = .makeOffer(listingId: listing.id)
+                    }
                         .primaryButtonStyle()
                 }
                 .padding()

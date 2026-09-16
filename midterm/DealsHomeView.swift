@@ -113,9 +113,15 @@ struct DealsHomeView: View {
                     // Flash Deals
                     VStack(spacing: 16) {
                         HStack {
-                            Text("⚡️ Flash Deals").font(.headline)
+                            Text("⚡️ Flash Deals")
+                                .font(.headline)
+                                .underline()
                             Spacer()
-                            Text(formatTime(timeRemaining)).font(.system(.subheadline, design: .monospaced)).padding(8).background(Color.orange.opacity(0.2)).cornerRadius(8)
+                            Text(formatTime(timeRemaining))
+                                .font(.system(.subheadline, design: .monospaced))
+                                .padding(8)
+                                .background(Color.orange.opacity(0.3))
+                                .cornerRadius(8)
                                 .onReceive(timer) { _ in
                                     if timeRemaining > 0 {
                                         timeRemaining -= 1
@@ -132,7 +138,8 @@ struct DealsHomeView: View {
                                     .scaledToFill()
                                     .frame(maxWidth: .infinity, maxHeight: 150) // Explicit frame
                                     .clipped()
-                                    .cornerRadius(15)
+                                    // Removed cornerRadius for sharp edges
+                                    .shadow(radius: 2) // Make it pop out
                             }
                         }
                         .frame(height: 150)
@@ -144,20 +151,21 @@ struct DealsHomeView: View {
                         }
                         
                         // 3x3 Grid
-                        LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 10) {
+                        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: 3), spacing: 10) {
                             ForEach(0..<gridImages.count, id: \.self) { i in
                                 Image(gridImages[i])
                                     .resizable()
-                                    .scaledToFill()
-                                    .frame(maxWidth: .infinity, maxHeight: 100) // Explicit frame
-                                    .clipped()
-                                    .cornerRadius(10)
+                                    .aspectRatio(contentMode: .fill) // Fill the container
+                                    .frame(width: (UIScreen.main.bounds.width - 60) / 3, height: 100) // Precise calculation
+                                    .clipped() // Strict boundary
+                                    .contentShape(Rectangle()) // Defines tap area
+                                    .shadow(radius: 2)
                             }
                         }
                         .padding(.horizontal)
                     }
                     .padding(.vertical, 8)
-                    .background(Color.orange.opacity(0.05))
+                    .background(Color.orange.opacity(0.2)) // Changed background color
                     .padding(.horizontal)
                 }
                 .padding(.top)

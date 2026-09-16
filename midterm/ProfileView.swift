@@ -3,6 +3,7 @@ import SwiftUI
 struct ProfileView: View {
     @ObservedObject var appState: AppState
     @State private var showVerificationSheet = false
+    @State private var showDeleteConfirmation = false
     
     var body: some View {
         NavigationStack(path: $appState.navigationPath) {
@@ -118,6 +119,24 @@ struct ProfileView: View {
                             .foregroundColor(.red)
                             .cornerRadius(12)
                             .padding(.horizontal)
+                        
+                        Button("Delete Account") {
+                            showDeleteConfirmation = true
+                        }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 12)
+                            .foregroundColor(.red)
+                            .padding(.horizontal)
+                            .confirmationDialog("Are you sure?", isPresented: $showDeleteConfirmation, titleVisibility: .visible) {
+                                Button("Delete Account", role: .destructive) {
+                                    // Clear user data
+                                    UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
+                                    appState.logout()
+                                }
+                                Button("Cancel", role: .cancel) { }
+                            } message: {
+                                Text("This action is permanent, you will not be able to recover your account after deleting it, proceed?")
+                            }
                     }
                     .padding(.bottom, 20)
                 }

@@ -35,7 +35,14 @@ struct LoginView: View {
             }
             
             Button("Sign In") {
-                appState.isAuthenticated = true
+                if email.isEmpty || password.isEmpty {
+                    errorMessage = "Please fill in all fields."
+                } else if email == appState.storedEmail && password == appState.storedPassword {
+                    errorMessage = ""
+                    appState.isAuthenticated = true
+                } else {
+                    errorMessage = "Invalid email or password."
+                }
             }
             .primaryButtonStyle()
             .padding(.horizontal)

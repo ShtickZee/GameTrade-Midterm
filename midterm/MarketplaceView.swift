@@ -69,7 +69,7 @@ struct MarketplaceView: View {
                         // Filter Menu
                         HStack {
                             Button {
-                                showingFilters.toggle()
+                                appState.activeSheet = .filters
                             } label: {
                                 HStack {
                                     Text("Filter")
@@ -91,7 +91,7 @@ struct MarketplaceView: View {
                                 .cornerRadius(10)
                             
                             Button {
-                                // TODO: Add Listing flow
+                                appState.activeSheet = .sell
                             } label: {
                                 Text("Add Listing")
                                     .padding(.horizontal, 10)
@@ -105,9 +105,19 @@ struct MarketplaceView: View {
                     }
                     .padding(.top)
                     
-                    .sheet(isPresented: $showingFilters) {
-                        // TODO: Implement Filter Sheet
-                        Text("Filters").presentationDetents([.medium])
+                    .sheet(item: $appState.activeSheet) { sheet in
+                        switch sheet {
+                        case .filters:
+                            Text("Filters Sheet").presentationDetents([.medium])
+                        case .sell:
+                            Text("Sell Flow Sheet").presentationDetents([.large])
+                        case .makeOffer(let id):
+                            Text("Make Offer for \(id)").presentationDetents([.medium])
+                        case .proposeTrade(let id):
+                            Text("Propose Trade for \(id)").presentationDetents([.medium])
+                        case .search:
+                            Text("Search Sheet").presentationDetents([.large])
+                        }
                     }
 
                     // Filter Chips

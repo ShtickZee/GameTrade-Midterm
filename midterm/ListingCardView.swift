@@ -9,10 +9,10 @@ struct ListingCardView: View {
             if let imageName = listing.images.first {
                 Image(imageName)
                     .resizable()
-                    .aspectRatio(contentMode: .fill) // Changed to aspectRatio(contentMode: .fill)
-                    .frame(maxWidth: .infinity) // Ensure it takes available width
-                    .frame(height: 150) // Set fixed height
-                    .clipped() // Ensure it stays within bounds
+                    .aspectRatio(contentMode: .fit) // Change back to .fit
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 150)
+                    .background(Color.white) // Ensure background fills space
                     .cornerRadius(10)
             } else {
                 RoundedRectangle(cornerRadius: 10)

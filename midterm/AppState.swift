@@ -36,6 +36,8 @@ class AppState: ObservableObject {
     // Auth state
     @AppStorage("isAuthenticated") var isAuthenticated = false
     @AppStorage("onboarded") var onboarded = false
+    @AppStorage("storedEmail") var storedEmail: String = ""
+    @AppStorage("storedPassword") var storedPassword: String = ""
     
     // User Profile Data (Persistent via AppStorage)
     @AppStorage("userName") var userName: String = "Alex Reyes"
@@ -45,9 +47,20 @@ class AppState: ObservableObject {
     @AppStorage("userLocation") var userLocation: String = "Makati"
     @AppStorage("userBio") var userBio: String = "Casual gamer and trader."
     
+    // Persistent profile image storage
+    @AppStorage("userProfileImageData") var userProfileImageData: Data = Data()
+    
+    var profileImage: UIImage? {
+        get { UIImage(data: userProfileImageData) }
+        set { userProfileImageData = newValue?.jpegData(compressionQuality: 0.5) ?? Data() }
+    }
+    
     @Published var activeTab: Tab = .deals
     @Published var navigationPath = NavigationPath()
     @Published var activeSheet: SheetType?
+    
+    // Sign-up flow navigation
+    @Published var shouldSetupProfile: Bool = false
     
     // Additional state
     @Published var offersBadge = true
