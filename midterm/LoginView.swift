@@ -37,11 +37,14 @@ struct LoginView: View {
             Button("Sign In") {
                 if email.isEmpty || password.isEmpty {
                     errorMessage = "Please fill in all fields."
-                } else if email == appState.storedEmail && password == appState.storedPassword {
-                    errorMessage = ""
-                    appState.isAuthenticated = true
                 } else {
-                    errorMessage = "Invalid email or password."
+                    appState.login(email: email, password: password) { error in
+                        if let error = error {
+                            errorMessage = error.localizedDescription
+                        } else {
+                            errorMessage = ""
+                        }
+                    }
                 }
             }
             .primaryButtonStyle()

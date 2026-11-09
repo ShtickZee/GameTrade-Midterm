@@ -1,5 +1,6 @@
 import SwiftUI
 import Combine
+import FirebaseAuth
 
 enum Tab: String {
     case deals, market, offers, profile
@@ -75,14 +76,20 @@ class AppState: ObservableObject {
     @Published var searchQuery: String = ""
     
     // Mock notifications
+    enum NotificationType {
+        case offer, message, trade, system
+    }
     struct Notification: Identifiable {
         let id = UUID()
+        let type: NotificationType
         let title: String
         let time: String
+        var isRead: Bool
     }
     @Published var notifications: [Notification] = [
-        Notification(title: "New offer on your PS5", time: "2 hours ago"),
-        Notification(title: "User123 messaged you", time: "5 hours ago")
+        Notification(type: .offer, title: "New offer on your PS5", time: "2 hours ago", isRead: false),
+        Notification(type: .message, title: "User123 messaged you", time: "5 hours ago", isRead: false),
+        Notification(type: .trade, title: "Your trade was accepted", time: "Yesterday", isRead: true)
     ]
     
     func showToast(_ message: String) {
@@ -110,8 +117,36 @@ class AppState: ObservableObject {
         }
     }
     
+    func login(email: String, password: String, completion: @escaping (Error?) -> Void) {
+        Auth.auth().signIn(withEmail: email, password: password) { result, error in
+            if let error = error {
+                completion(error)
+            } else {
+                self.isAuthenticated = true
+                completion(nil)
+            }
+        }
+    }
+    
+    func signUp(email: String, password: String, completion: @escaping (Error?) -> Void) {
+        Auth.auth().createUser(withEmail: email, password: password) { result, error in
+            if let error = error {
+                completion(error)
+            } else {
+                self.isAuthenticated = true
+                self.shouldSetupProfile = true
+                completion(nil)
+            }
+        }
+    }
+    
     func logout() {
-        isAuthenticated = false
-        onboarded = false
+        do {
+            try Auth.auth().signOut()
+            isAuthenticated = false
+            onboarded = false
+        } catch {
+            print("Error signing out: \(error.localizedDescription)")
+        }
     }
 }

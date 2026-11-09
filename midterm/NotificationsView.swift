@@ -10,7 +10,8 @@ struct NotificationsView: View {
                     NotificationRow(
                         title: notification.title,
                         subtitle: "Check it out now!",
-                        time: notification.time
+                        time: notification.time,
+                        isRead: notification.isRead
                     )
                 }
             }

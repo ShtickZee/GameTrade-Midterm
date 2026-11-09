@@ -62,15 +62,17 @@ struct CreateAccountView: View {
                         errorMessage = "Passwords do not match."
                     } else {
                         errorMessage = ""
-                        // Save credentials
-                        appState.storedEmail = email
-                        appState.storedPassword = password
                         
-                        // Initialize default profile data
-                        appState.userEmail = email
-                        
-                        // Proceed to profile setup
-                        appState.shouldSetupProfile = true
+                        appState.signUp(email: email, password: password) { error in
+                            if let error = error {
+                                errorMessage = error.localizedDescription
+                            } else {
+                                errorMessage = ""
+                                // Initialize default profile data
+                                appState.userEmail = email
+                                // appState.shouldSetupProfile = true is now handled in signUp
+                            }
+                        }
                     }
                 }
                 .disabled(!isEmailValid || password.isEmpty || confirmPassword.isEmpty)
