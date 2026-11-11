@@ -4,8 +4,16 @@ struct SearchView: View {
     @ObservedObject var appState: AppState
     @Environment(\.dismiss) var dismiss
     
-    // Placeholder data
-    let items = Array(0..<9)
+    var filteredListings: [Listing] {
+        if appState.searchQuery.isEmpty {
+            return appState.listings
+        } else {
+            return appState.listings.filter { 
+                $0.title.localizedCaseInsensitiveContains(appState.searchQuery) ||
+                $0.platform.rawValue.localizedCaseInsensitiveContains(appState.searchQuery)
+            }
+        }
+    }
     
     var body: some View {
         NavigationStack {
@@ -18,33 +26,17 @@ struct SearchView: View {
                         .cornerRadius(12)
                         .padding(.horizontal)
                     
-                    // Listings Near You
-                    Text("Listings Near You")
+                    // Listings
+                    Text("Listings")
                         .font(.headline)
                         .padding(.horizontal)
                     
-                    LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 10) {
-                        ForEach(items, id: \.self) { _ in
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(Color.gray.opacity(0.2))
-                                .aspectRatio(1, contentMode: .fit)
-                                .overlay(Text("🎮"))
-                        }
-                    }
-                    .padding(.horizontal)
-                    
-                    // Trending Searches
-                    Text("Trending Searches")
-                        .font(.headline)
-                        .padding(.horizontal)
-                    
-                    HStack {
-                        ForEach(["#PS5", "#Xbox", "#Switch"], id: \.self) { tag in
-                            Text(tag)
-                                .padding(.horizontal, 12)
-                                .padding(.vertical, 6)
-                                .background(Color.purple.opacity(0.1))
-                                .cornerRadius(20)
+                    LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 2), spacing: 16) {
+                        ForEach(filteredListings) { listing in
+                            ListingCardView(listing: listing)
+                                .onTapGesture {
+                                    appState.navigate(to: .listing(listingId: listing.id))
+                                }
                         }
                     }
                     .padding(.horizontal)
@@ -56,6 +48,9 @@ struct SearchView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Close") { dismiss() }
                 }
+            }
+            .onAppear {
+                appState.fetchListings()
             }
         }
     }

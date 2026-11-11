@@ -5,7 +5,7 @@ struct PrimaryButtonStyle: ViewModifier {
         content
             .frame(maxWidth: .infinity)
             .padding()
-            .background(Color.purple)
+            .background(Theme.primary)
             .foregroundColor(.white)
             .cornerRadius(12)
     }

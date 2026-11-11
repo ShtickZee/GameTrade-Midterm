@@ -53,7 +53,7 @@ struct DealsHomeView: View {
                     // Header & Search
                     VStack(spacing: 12) {
                         HStack {
-                            Text("Game").font(.title2).bold() + Text("Trade!").font(.title2).bold().foregroundColor(.purple)
+                            Text("Game").font(.title2).bold() + Text("Trade!").font(.title2).bold().foregroundColor(Theme.primary)
                             Text("⚡️")
                             Spacer()
                             Image(systemName: "message.fill")

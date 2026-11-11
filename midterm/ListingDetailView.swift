@@ -8,14 +8,20 @@ struct ListingDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                // Image Carousel
+                // Image Carousel with AsyncImage
                 TabView {
-                    ForEach(listing.images, id: \.self) { image in
-                        Image(image)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(maxWidth: .infinity)
-                            .clipped()
+                    ForEach(listing.images, id: \.self) { imageUrl in
+                        AsyncImage(url: URL(string: imageUrl)) { image in
+                            image
+                                .resizable()
+                                .scaledToFill()
+                        } placeholder: {
+                            Rectangle()
+                                .fill(Color.gray.opacity(0.2))
+                                .overlay(ProgressView())
+                        }
+                        .frame(maxWidth: .infinity)
+                        .clipped()
                     }
                 }
                 .tabViewStyle(PageTabViewStyle())
@@ -42,10 +48,14 @@ struct ListingDetailView: View {
                 // Seller Section
                 NavigationLink(value: StackScreen.otherProfile(userId: listing.sellerID)) {
                     HStack(spacing: 12) {
-                        Circle()
-                            .fill(Color.gray.opacity(0.2))
-                            .frame(width: 50, height: 50)
-                            .overlay(Text(String(listing.sellerName.prefix(1))))
+                        // User Avatar (also AsyncImage)
+                        AsyncImage(url: URL(string: listing.sellerAvatar)) { image in
+                            image.resizable().scaledToFill()
+                        } placeholder: {
+                            Circle().fill(Color.gray.opacity(0.2))
+                        }
+                        .frame(width: 50, height: 50)
+                        .clipShape(Circle())
                         
                         VStack(alignment: .leading) {
                             HStack {
