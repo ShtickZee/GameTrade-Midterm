@@ -66,6 +66,8 @@ class AppState: ObservableObject {
     // Sign-up flow navigation
     @Published var shouldSetupProfile: Bool = false
     @Published var isSavingProfile: Bool = false
+    @Published var searchQuery: String = ""
+    @Published var showingImagePicker: Bool = false
 
     // Additional state
     @Published var offersBadge = true
