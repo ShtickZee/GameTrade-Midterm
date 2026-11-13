@@ -5,6 +5,12 @@ struct OfferCardView: View {
     let subtitle: String
     let status: String
     
+    // Dependencies to make buttons functional
+    let listingId: String
+    let otherUserId: String
+    let otherUserName: String
+    @ObservedObject var appState: AppState
+    
     var body: some View {
         VStack(spacing: 16) {
             HStack(alignment: .top, spacing: 12) {
@@ -21,7 +27,7 @@ struct OfferCardView: View {
                         .font(.subheadline)
                         .foregroundColor(.primary)
                 }
-
+                
                 
                 Spacer()
                 
@@ -34,16 +40,25 @@ struct OfferCardView: View {
             }
             
             HStack(spacing: 12) {
-                Button("Reject") { }
+                Button("Reject") {
+                    appState.showToast("Offer rejected")
+                }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 10)
                     .background(Color.gray.opacity(0.1))
                     .cornerRadius(10)
+                    .foregroundColor(.primary)
                 
-                Button("Chat") { }
+                Button("Chat") {
+                    appState.openOrCreateChat(
+                        sellerId: otherUserId,
+                        sellerName: otherUserName,
+                        initialMessage: "Hi, about your offer for \(title)..."
+                    )
+                }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 10)
-                    .background(Color.purple)
+                    .background(Theme.primary)
                     .foregroundColor(.white)
                     .cornerRadius(10)
             }
@@ -54,10 +69,6 @@ struct OfferCardView: View {
         .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
         .padding(.horizontal)
     }
-}
-
-#Preview {
-    OffersView(appState: AppState())
 }
 
 struct OffersView: View {
@@ -79,7 +90,11 @@ struct OffersView: View {
                         OfferCardView(
                             title: "mia.trades",
                             subtitle: "wants to trade: Xbox Series S + $40 on PS4 Pro 1TB",
-                            status: "Pending"
+                            status: "Pending",
+                            listingId: "L5",
+                            otherUserId: "mia",
+                            otherUserName: "Mia",
+                            appState: appState
                         )
                     }
                 }

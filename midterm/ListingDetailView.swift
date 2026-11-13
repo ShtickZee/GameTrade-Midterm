@@ -93,12 +93,24 @@ struct ListingDetailView: View {
                 // Action Buttons
                 HStack(spacing: 16) {
                     Button("Contact Seller") {
-                        appState.showToast("Contacting seller...")
+                        print("🔥 Contact Seller button tapped")
+                        appState.openOrCreateChat(
+                            sellerId: listing.sellerID,
+                            sellerName: listing.sellerName,
+                            sellerHandle: "@\(listing.sellerName.lowercased().replacingOccurrences(of: " ", with: ""))",
+                            listing: listing,
+                            initialMessage: "Hi \(listing.sellerName), is your \(listing.title) still available?"
+                        )
                     }
                         .secondaryButtonStyle()
                     
                     Button("Make Offer") {
-                        appState.activeSheet = .makeOffer(listingId: listing.id)
+                        appState.openOrCreateChat(
+                            sellerId: listing.sellerID,
+                            sellerName: listing.sellerName,
+                            listing: listing,
+                            initialOfferAmount: listing.price // Assuming user offers the listed price as initial
+                        )
                     }
                         .primaryButtonStyle()
                 }

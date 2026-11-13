@@ -1,16 +1,12 @@
 import SwiftUI
 import FirebaseCore
-import FirebaseAppCheck
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        
-        // Use AppCheck Debug Provider for development
-        let providerFactory = AppCheckDebugProviderFactory()
-        AppCheck.setAppCheckProviderFactory(providerFactory)
-        
+        print("🔥 [midtermApp] Configuring Firebase...")
         FirebaseApp.configure()
+        print("🔥 [midtermApp] Firebase configured successfully.")
         return true
     }
 }
@@ -19,6 +15,10 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 struct midtermApp: App {
     // register app delegate for Firebase setup
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    
+    init() {
+        print("🔥 [midtermApp] Initializing App...")
+    }
     
     var body: some Scene {
         WindowGroup {

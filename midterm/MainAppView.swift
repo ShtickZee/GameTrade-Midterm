@@ -29,6 +29,7 @@ struct MainAppView: View {
                 }
                 .tag(Tab.profile)
         }
+        .environmentObject(appState)
         .sheet(item: $appState.activeSheet) { sheetType in
             switch sheetType {
             case .makeOffer(let listingId):

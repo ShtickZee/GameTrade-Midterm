@@ -9,6 +9,7 @@ enum Tab: String {
 enum StackScreen: Hashable {
     case listing(listingId: String)
     case otherProfile(userId: String)
+    case chatDetail(chatId: String)
     case search
     case notifications
     case saved
@@ -67,6 +68,41 @@ class AppState: ObservableObject {
     @Published var shouldSetupProfile: Bool = false
     @Published var isSavingProfile: Bool = false
     @Published var searchQuery: String = ""
+    @Published var activeChatId: String? = nil
+
+    @MainActor
+    func openOrCreateChat(
+        sellerId: String,
+        sellerName: String,
+        sellerHandle: String = "@seller",
+        listing: Listing? = nil,
+        initialMessage: String? = nil,
+        initialOfferAmount: Double? = nil,
+        initialTradeItemTitle: String? = nil
+    ) {
+        Task { @MainActor in
+            do {
+                let chatId = try await ChatService.shared.getOrCreateChat(
+                    currentUserName: self.userName,
+                    currentUserHandle: self.userHandle,
+                    otherUserId: sellerId,
+                    otherUserName: sellerName,
+                    otherUserHandle: sellerHandle,
+                    listing: listing,
+                    initialMessage: initialMessage,
+                    initialOfferAmount: initialOfferAmount,
+                    initialTradeItemTitle: initialTradeItemTitle
+                )
+                self.activeSheet = nil
+                self.activeChatId = chatId
+                print("🔥 Debug: Navigating to chatDetail with chatId: \(chatId)")
+                self.navigate(to: .chatDetail(chatId: chatId))
+            } catch {
+                print("🔥 Failed to open or create chat: \(error.localizedDescription)")
+                self.showToast("Could not open chat: \(error.localizedDescription)")
+            }
+        }
+    }
     @Published var showingImagePicker: Bool = false
 
     // Additional state
@@ -274,6 +310,9 @@ class AppState: ObservableObject {
     }
 
     func logout() {
+        Task { @MainActor in
+            ChatService.shared.stopAllListeners()
+        }
         do {
             try Auth.auth().signOut()
             isAuthenticated = false

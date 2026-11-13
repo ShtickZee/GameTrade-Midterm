@@ -157,6 +157,10 @@ struct ProfileView: View {
                         bio: isPreview ? appState.userBio : "Gamer since 1990.",
                         reviews: isPreview ? [Review(reviewerName: "Mike", rating: 4, comment: "Great seller", date: "2 days ago")] : []
                     )
+                    .environmentObject(appState)
+                case .chatDetail(let chatId):
+                    ChatDetailView(chatId: chatId, appState: appState)
+                        .environmentObject(appState)
                 default:
                     Text("Screen not implemented")
                 }

@@ -41,7 +41,7 @@ struct MarketplaceView: View {
     
     @State private var selectedPlatform: Platform? = nil
     @State private var selectedCategory: Category = .all
-
+    
     var filteredListings: [Listing] {
         listings.filter { listing in
             let matchesSearch = searchText.isEmpty || listing.title.localizedCaseInsensitiveContains(searchText)
@@ -51,7 +51,7 @@ struct MarketplaceView: View {
             return matchesSearch && matchesPlatform
         }
     }
-
+    
     var body: some View {
         NavigationStack(path: $appState.navigationPath) {
             ScrollView {
@@ -119,7 +119,7 @@ struct MarketplaceView: View {
                             Text("Search Sheet").presentationDetents([.large])
                         }
                     }
-
+                    
                     // Filter Chips
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack {
@@ -165,6 +165,7 @@ struct MarketplaceView: View {
                 case .listing(let id):
                     if let listing = listings.first(where: { $0.id == id }) {
                         ListingDetailView(listing: listing)
+                            .environmentObject(appState)
                     } else {
                         Text("Listing not found")
                     }
@@ -178,6 +179,10 @@ struct MarketplaceView: View {
                         bio: isAlfye ? "Gamer and collector." : "Casual gamer and trader.",
                         reviews: [Review(reviewerName: "Mike", rating: 4, comment: "Great seller", date: "2 days ago")]
                     )
+                    .environmentObject(appState)
+                case .chatDetail(let chatId):
+                    ChatDetailView(chatId: chatId, appState: appState)
+                        .environmentObject(appState)
                 default:
                     Text("Screen not implemented")
                 }

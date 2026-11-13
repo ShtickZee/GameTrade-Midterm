@@ -7,6 +7,8 @@ struct OtherProfileView: View {
     let bio: String
     let reviews: [Review]
     
+    @EnvironmentObject var appState: AppState
+    
     // Default initializer for preview purposes
     init(userId: String, userName: String = "Sarah Johnson", rating: Double = 4.8, bio: String = "Casual gamer and trader.", reviews: [Review] = []) {
         self.userId = userId
@@ -54,6 +56,18 @@ struct OtherProfileView: View {
                         .padding(.top, 8)
                         .padding(.horizontal)
                         .multilineTextAlignment(.center)
+                    
+                    Button("Message") {
+                        print("🔥 Message button tapped")
+                        appState.openOrCreateChat(
+                            sellerId: userId,
+                            sellerName: userName,
+                            initialMessage: "Hey \(userName)!"
+                        )
+                    }
+                    .primaryButtonStyle()
+                    .padding(.horizontal, 40)
+                    .padding(.top, 10)
                 }
                 
                 // Reviews
