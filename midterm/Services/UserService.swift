@@ -212,4 +212,38 @@ final class UserService {
             }
         }
     }
+
+    // MARK: - Fetch All Registered Users (For Direct Testing & Discovery)
+
+    func fetchAllRegisteredUsers(completion: @escaping (Result<[PublicUserProfile], Error>) -> Void) {
+        let currentUid = Auth.auth().currentUser?.uid ?? ""
+        db.collection("users").getDocuments { snapshot, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+
+            let users = snapshot?.documents.compactMap { doc -> PublicUserProfile? in
+                guard doc.documentID != currentUid else { return nil }
+                let data = doc.data()
+                return PublicUserProfile(
+                    id: doc.documentID,
+                    name: data["name"] as? String,
+                    handle: data["handle"] as? String ?? "@trader",
+                    bio: data["bio"] as? String ?? "",
+                    coarseLocation: data["coarseLocation"] as? String ?? "",
+                    avatarURL: data["avatarURL"] as? String,
+                    role: .standardUser,
+                    rating: data["rating"] as? Double ?? 5.0,
+                    reviewsCount: data["reviewsCount"] as? Int ?? 0,
+                    verified: data["verified"] as? Bool ?? true,
+                    listingsCount: data["listingsCount"] as? Int ?? 0,
+                    soldCount: data["soldCount"] as? Int ?? 0,
+                    createdAt: data["createdAt"] as? Double ?? 0
+                )
+            } ?? []
+
+            completion(.success(users))
+        }
+    }
 }

@@ -60,6 +60,7 @@ struct Review: Identifiable, Codable {
 
 enum UserRole: String, Codable {
     case standardUser = "standard_user"
+    case storefront = "storefront"
 }
 
 /// Stored at `users/{uid}` — Safe to be read by any authenticated user browsing the marketplace.
@@ -98,4 +99,41 @@ struct PrivateUserData: Codable {
     var phoneHash: String          // SHA-256 digest via CryptoKit
     var exactLocation: String      // Full private location string / coordinates
     var updatedAt: TimeInterval
+}
+
+// MARK: - Dynamic Promo & Flash Deal Models (Mobbin / Steam Gaming Patterns)
+
+struct PromoBannerItem: Identifiable, Hashable {
+    let id: String
+    let badge: String
+    let title: String
+    let subtitle: String
+    let ctaText: String
+    let imageName: String
+    let targetPlatform: Platform?
+    let targetListingId: String?
+    let gradientHexes: [String]
+}
+
+struct FlashDealCardItem: Identifiable, Hashable {
+    let id: String
+    let listingId: String
+    let title: String
+    let platform: Platform
+    let currentPrice: Double
+    let originalPrice: Double
+    let imageName: String
+    let stockRemaining: Int
+    let totalStock: Int
+
+    var discountPercentage: Int {
+        guard originalPrice > currentPrice else { return 0 }
+        return Int(((originalPrice - currentPrice) / originalPrice) * 100)
+    }
+
+    var claimedRatio: Double {
+        let sold = totalStock - stockRemaining
+        guard totalStock > 0 else { return 0 }
+        return Double(sold) / Double(totalStock)
+    }
 }

@@ -30,6 +30,8 @@ struct MainAppView: View {
                 .tag(Tab.profile)
         }
         .environmentObject(appState)
+        .tint(Theme.primary)
+        .preferredColorScheme(.dark)
         .sheet(item: $appState.activeSheet) { sheetType in
             switch sheetType {
             case .makeOffer(let listingId):
@@ -42,6 +44,11 @@ struct MainAppView: View {
                 Text("Sell Flow")
             case .search:
                 SearchView(appState: appState)
+            case .chatList:
+                NavigationStack {
+                    ChatListView(appState: appState)
+                        .environmentObject(appState)
+                }
             }
         }
     }

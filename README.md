@@ -26,4 +26,11 @@ The application is currently implemented as a SwiftUI project with a correspondi
 
 The project is divided into:
 - `/midterm`: Native SwiftUI implementation.
+  - `App/`: App entry (`midtermApp.swift`), root router (`ContentView.swift`), and central state (`AppState.swift`).
+  - `Models/`: Core models (`Models.swift`) and chat models (`ChatModels.swift`).
+  - `Services/`: Firebase and storage services (`UserService.swift`, `ListingService.swift`, `ChatService.swift`, `ImageService.swift`).
+  - `Views/`: SwiftUI screens organized into feature subfolders (`Auth/`, `Main/`, `Listings/`, `Profile/`, `Chat/`, `Search/`, `Notifications/`).
+  - `Components/`: Reusable UI widgets (`ImagePicker.swift`, `NotificationRow.swift`, `ReviewCard.swift`).
+  - `Utilities/`: Design tokens, button styles, and crypto helpers (`Theme.swift`, `ViewModifiers.swift`, `SecurityUtils.swift`).
+  - `Resources/`: Media and configuration (`Assets.xcassets`, `GoogleService-Info.plist`, `Image_Folder/`).
 - `/UI Prototype (Midterm)`: React/TypeScript prototype for UI/UX reference.

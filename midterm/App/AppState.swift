@@ -22,6 +22,7 @@ enum SheetType: Identifiable {
     case filters
     case sell
     case search
+    case chatList
 
     var id: String {
         switch self {
@@ -30,6 +31,7 @@ enum SheetType: Identifiable {
         case .filters: return "filters"
         case .sell: return "sell"
         case .search: return "search"
+        case .chatList: return "chat-list"
         }
     }
 }
@@ -62,13 +64,24 @@ class AppState: ObservableObject {
 
     @Published var activeTab: Tab = .deals
     @Published var navigationPath = NavigationPath()
+    @Published var dealsNavPath = NavigationPath()
+    @Published var marketNavPath = NavigationPath()
+    @Published var offersNavPath = NavigationPath()
+    @Published var profileNavPath = NavigationPath()
     @Published var activeSheet: SheetType?
+
+    var totalUnreadMessages: Int {
+        ChatService.shared.conversations.reduce(0) {
+            $0 + ($1.unreadCounts[ChatService.shared.currentUid] ?? 0)
+        }
+    }
 
     // Sign-up flow navigation
     @Published var shouldSetupProfile: Bool = false
     @Published var isSavingProfile: Bool = false
     @Published var searchQuery: String = ""
     @Published var activeChatId: String? = nil
+    @Published var selectedMarketPlatform: Platform? = nil
 
     @MainActor
     func openOrCreateChat(
@@ -80,6 +93,12 @@ class AppState: ObservableObject {
         initialOfferAmount: Double? = nil,
         initialTradeItemTitle: String? = nil
     ) {
+        // Guard: user must be signed in for real Firestore chat
+        guard isAuthenticated, !currentUserId.isEmpty else {
+            showToast("Please sign in to chat with sellers.")
+            return
+        }
+
         Task { @MainActor in
             do {
                 let chatId = try await ChatService.shared.getOrCreateChat(
@@ -95,7 +114,7 @@ class AppState: ObservableObject {
                 )
                 self.activeSheet = nil
                 self.activeChatId = chatId
-                print("🔥 Debug: Navigating to chatDetail with chatId: \(chatId)")
+                print("🔥 Navigating to chatDetail: \(chatId)")
                 self.navigate(to: .chatDetail(chatId: chatId))
             } catch {
                 print("🔥 Failed to open or create chat: \(error.localizedDescription)")
@@ -172,9 +191,16 @@ class AppState: ObservableObject {
                         self.isAuthenticated = true
                     }
                     self.syncUserProfileFromFirestore(uid: user.uid)
+                    // Start real-time chat listener now that we have an authenticated UID
+                    Task { @MainActor in
+                        ChatService.shared.listenToConversations()
+                    }
                 } else {
                     self.currentUserId = ""
                     self.isAuthenticated = false
+                    Task { @MainActor in
+                        ChatService.shared.stopAllListeners()
+                    }
                 }
             }
         }
@@ -263,10 +289,30 @@ class AppState: ObservableObject {
     }
 
     func navigate(to screen: StackScreen) {
+        switch activeTab {
+        case .deals:
+            dealsNavPath.append(screen)
+        case .market:
+            marketNavPath.append(screen)
+        case .offers:
+            offersNavPath.append(screen)
+        case .profile:
+            profileNavPath.append(screen)
+        }
         navigationPath.append(screen)
     }
 
     func goBack() {
+        switch activeTab {
+        case .deals:
+            if !dealsNavPath.isEmpty { dealsNavPath.removeLast() }
+        case .market:
+            if !marketNavPath.isEmpty { marketNavPath.removeLast() }
+        case .offers:
+            if !offersNavPath.isEmpty { offersNavPath.removeLast() }
+        case .profile:
+            if !profileNavPath.isEmpty { profileNavPath.removeLast() }
+        }
         if !navigationPath.isEmpty {
             navigationPath.removeLast()
         }
